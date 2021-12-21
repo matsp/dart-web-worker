@@ -1,0 +1,4 @@
+enum WorkerType {
+ fibonacci,
+ random,
+}
