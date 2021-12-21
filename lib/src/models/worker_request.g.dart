@@ -26,4 +26,7 @@ Map<String, dynamic> _$WorkerRequestToJson<T>(
       'data': toJsonT(instance.data),
     };
 
-const _$WorkerTypeEnumMap = {};
+const _$WorkerTypeEnumMap = {
+  WorkerType.fibonacci: 'fibonacci',
+  WorkerType.random: 'random',
+};

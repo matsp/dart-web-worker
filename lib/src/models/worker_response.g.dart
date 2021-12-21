@@ -32,7 +32,10 @@ Map<String, dynamic> _$WorkerResponseToJson<T>(
       'errors': instance.errors,
     };
 
-const _$WorkerTypeEnumMap = {};
+const _$WorkerTypeEnumMap = {
+  WorkerType.fibonacci: 'fibonacci',
+  WorkerType.random: 'random',
+};
 
 T? _$nullableGenericFromJson<T>(
   Object? input,

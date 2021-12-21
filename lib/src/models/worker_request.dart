@@ -1,4 +1,4 @@
-import 'package:dart_web_worker/src/models/worker_types.dart';
+import 'package:dart_web_worker/src/models/worker_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'worker_request.g.dart';

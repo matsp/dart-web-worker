@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:js';
 
+import 'package:dart_web_worker/src/models/worker_request.dart';
+import 'package:dart_web_worker/src/models/worker_response.dart';
+import 'package:dart_web_worker/src/models/worker_type.dart';
 import 'package:js/js.dart';
 
 @anonymous
 @JS()
 abstract class MessageEvent {
-  external dynamic get data;
+  external WorkerRequest get data;
 }
 
 @JS('postMessage')
@@ -15,37 +18,23 @@ external void PostMessage(obj);
 @JS('onmessage')
 external void set onMessage(f);
 
-@JS('JSON.stringify')
-external String stringify(Object obj);
-
 void main() {
   print('Worker - created');
 
-  final data$ = StreamController<dynamic>.broadcast();
-  final results$ = StreamController<WorkerResult>.broadcast();
+  final data$ = StreamController<WorkerRequest>.broadcast();
+  final results$ = StreamController<WorkerResponse>.broadcast();
 
-  onMessage = allowInterop((event) => data$.sink.add(event.data));
+  onMessage = allowInterop((MessageEvent event) => data$.sink.add(WorkerRequest.fromJson(event.data, );
+   
 
   final fibonacciService = FibonacciService();
-  results$.addStream(fibonacciService.result$);
+  results$.addStream(fibonacciService.response$);
 
   data$.stream.listen((event) {
-    final e = JsObject.jsify(event);
-    if (e.hasProperty('type') && e.hasProperty('data')) {
-      switch (e['type']) {
-        case 'fibonacci':
-          fibonacciService.data$.add(e['data']);
-          break;
-      }
-    }
+    print(event);
   });
 
-  results$.stream.listen((event) {
-    PostMessage(stringify({
-      'type': 'fibonacci',
-      'result': (event as FibonacciWorkerResult).n.toString()
-    }));
-  });
+  results$.stream.listen((event) {});
 
   // service.result$.listen((event) {
   //   PostMessage(event);
@@ -59,27 +48,31 @@ void main() {
   // });
 }
 
-class FibonacciService extends WebWorkerService<String, FibonacciWorkerResult> {
+class FibonacciService extends WebWorkerService<int> {
   @override
-  Future<FibonacciWorkerResult> perform(String data) async =>
-      FibonacciWorkerResult(n: fib(int.parse(data)));
+  Future<WorkerResponse<int>> perform(int data) async => WorkerResponse(
+        id: '1',
+        requestId: 'todo', // TODO: how to obtain?!
+        type: WorkerType.fibonacci,
+        data: fib(data),
+      );
 }
 
-abstract class WebWorkerService<T, R> {
-  final StreamController<T> _data = StreamController<T>();
-  final StreamController<R> _result = StreamController<R>();
+abstract class WebWorkerService<T> {
+  final _data = StreamController<T>();
+  final _response = StreamController<WorkerResponse>();
 
   Sink<T> get data$ => _data.sink;
-  Stream<R> get result$ => _result.stream;
+  Stream<WorkerResponse> get response$ => _response.stream;
 
   WebWorkerService() {
     _data.stream.listen((T event) async {
       final result = await perform(event);
-      _result.add(result);
+      _response.add(result);
     });
   }
 
-  Future<R> perform(T data);
+  Future<WorkerResponse<T>> perform(T data);
 }
 
 int fib(int n) {
@@ -87,23 +80,4 @@ int fib(int n) {
     return n;
   }
   return fib(n - 2) + fib(n - 1); //recursive case
-}
-
-abstract class WorkerResult {}
-
-class FibonacciWorkerResult extends WorkerResult {
-  final int n;
-
-  FibonacciWorkerResult({required this.n});
-}
-
-class RandomWorkerResult implements WorkerResult {
-  final int number;
-
-  const RandomWorkerResult({required this.number});
-}
-
-enum WorkerDataType {
-  fibonacci,
-  random,
 }
