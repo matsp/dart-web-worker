@@ -8,5 +8,7 @@ void main() {
     print('ui thread - got message from worker: ${event.data}');
   });
 
-  Future.delayed(Duration(seconds: 3), () => worker.postMessage('45'));
+  // Future.delayed(Duration(seconds: 3), () => worker.postMessage('hello'));
+  // worker.postMessage({'type': 'fibonacci'});
+  worker.postMessage(<String, String>{'type': 'fibonacci', 'data': '10'});
 }
