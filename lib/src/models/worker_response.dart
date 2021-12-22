@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'worker_response.g.dart';
 
-@JsonSerializable(genericArgumentFactories: true)
+@JsonSerializable()
 class WorkerResponse<T> {
   final String id;
   final String requestId;

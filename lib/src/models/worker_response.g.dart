@@ -29,7 +29,7 @@ Map<String, dynamic> _$WorkerResponseToJson<T>(
       'requestId': instance.requestId,
       'type': _$WorkerTypeEnumMap[instance.type],
       'data': _$nullableGenericToJson(instance.data, toJsonT),
-      'errors': instance.errors,
+      'errors': instance.errors?.map((e) => e.toJson()).toList(),
     };
 
 const _$WorkerTypeEnumMap = {
