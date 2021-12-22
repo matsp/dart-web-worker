@@ -6,7 +6,7 @@ part 'worker_response.g.dart';
 class WorkerResponse<T> {
   final String id;
   final String requestId;
-  final T response;
+  final T? response;
   final List<WorkerResponseError>? errors;
 
   const WorkerResponse({

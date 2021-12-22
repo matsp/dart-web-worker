@@ -13,7 +13,7 @@ WorkerResponse<T> _$WorkerResponseFromJson<T>(
     WorkerResponse<T>(
       id: json['id'] as String,
       requestId: json['requestId'] as String,
-      response: fromJsonT(json['response']),
+      response: _$nullableGenericFromJson(json['response'], fromJsonT),
       errors: (json['errors'] as List<dynamic>?)
           ?.map((e) => WorkerResponseError.fromJson(e))
           .toList(),
@@ -26,9 +26,21 @@ Map<String, dynamic> _$WorkerResponseToJson<T>(
     <String, dynamic>{
       'id': instance.id,
       'requestId': instance.requestId,
-      'response': toJsonT(instance.response),
+      'response': _$nullableGenericToJson(instance.response, toJsonT),
       'errors': instance.errors?.map((e) => e.toJson()).toList(),
     };
+
+T? _$nullableGenericFromJson<T>(
+  Object? input,
+  T Function(Object? json) fromJson,
+) =>
+    input == null ? null : fromJson(input);
+
+Object? _$nullableGenericToJson<T>(
+  T? input,
+  Object? Function(T value) toJson,
+) =>
+    input == null ? null : toJson(input);
 
 WorkerResponseError _$WorkerResponseErrorFromJson(Map<String, dynamic> json) =>
     WorkerResponseError(
