@@ -17,9 +17,9 @@ class WorkerResponse<T> {
   });
 
   factory WorkerResponse.fromJson(dynamic json, T Function(Object? json) fromJsonT) =>
-      _$WorkerResponseFromJson(json, fromJsonT);
+      _$WorkerResponseFromJson<T>(json, fromJsonT);
 
-  Map<String, dynamic> toJson(Object Function(T value) toJsonT) => _$WorkerResponseToJson(this, toJsonT);
+  Map<String, dynamic> toJson(Object? Function(T value) toJsonT) => _$WorkerResponseToJson<T>(this, toJsonT);
 }
 
 @JsonSerializable()

@@ -14,8 +14,8 @@ class WorkerRequest<T> {
 
   factory WorkerRequest.fromJson(
           dynamic json, T Function(Object? json) fromJsonT) =>
-      _$WorkerRequestFromJson(json, fromJsonT);
+      _$WorkerRequestFromJson<T>(json, fromJsonT);
 
-  Map<String, dynamic> toJson(Object Function(T value) toJsonT) =>
-      _$WorkerRequestToJson(this, toJsonT);
+  Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
+      _$WorkerRequestToJson<T>(this, toJsonT);
 }
