@@ -1,4 +1,3 @@
-import 'package:dart_web_worker/src/models/worker_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'worker_response.g.dart';
@@ -7,15 +6,13 @@ part 'worker_response.g.dart';
 class WorkerResponse<T> {
   final String id;
   final String requestId;
-  final WorkerType type;
-  final T? data;
+  final T response;
   final List<WorkerResponseError>? errors;
 
   const WorkerResponse({
     required this.id,
     required this.requestId,
-    required this.type,
-    this.data,
+    required this.response,
     this.errors,
   });
 

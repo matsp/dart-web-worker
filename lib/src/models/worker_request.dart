@@ -1,4 +1,3 @@
-import 'package:dart_web_worker/src/models/worker_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'worker_request.g.dart';
@@ -6,13 +5,11 @@ part 'worker_request.g.dart';
 @JsonSerializable()
 class WorkerRequest<T> {
   final String id;
-  final WorkerType type;
-  final T data;
+  final T request;
 
   const WorkerRequest({
     required this.id,
-    required this.type,
-    required this.data,
+    required this.request,
   });
 
   factory WorkerRequest.fromJson(

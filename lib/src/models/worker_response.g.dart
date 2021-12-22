@@ -13,8 +13,7 @@ WorkerResponse<T> _$WorkerResponseFromJson<T>(
     WorkerResponse<T>(
       id: json['id'] as String,
       requestId: json['requestId'] as String,
-      type: $enumDecode(_$WorkerTypeEnumMap, json['type']),
-      data: _$nullableGenericFromJson(json['data'], fromJsonT),
+      response: fromJsonT(json['response']),
       errors: (json['errors'] as List<dynamic>?)
           ?.map((e) => WorkerResponseError.fromJson(e))
           .toList(),
@@ -27,27 +26,9 @@ Map<String, dynamic> _$WorkerResponseToJson<T>(
     <String, dynamic>{
       'id': instance.id,
       'requestId': instance.requestId,
-      'type': _$WorkerTypeEnumMap[instance.type],
-      'data': _$nullableGenericToJson(instance.data, toJsonT),
+      'response': toJsonT(instance.response),
       'errors': instance.errors?.map((e) => e.toJson()).toList(),
     };
-
-const _$WorkerTypeEnumMap = {
-  WorkerType.fibonacci: 'fibonacci',
-  WorkerType.random: 'random',
-};
-
-T? _$nullableGenericFromJson<T>(
-  Object? input,
-  T Function(Object? json) fromJson,
-) =>
-    input == null ? null : fromJson(input);
-
-Object? _$nullableGenericToJson<T>(
-  T? input,
-  Object? Function(T value) toJson,
-) =>
-    input == null ? null : toJson(input);
 
 WorkerResponseError _$WorkerResponseErrorFromJson(Map<String, dynamic> json) =>
     WorkerResponseError(

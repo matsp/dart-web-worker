@@ -12,8 +12,7 @@ WorkerRequest<T> _$WorkerRequestFromJson<T>(
 ) =>
     WorkerRequest<T>(
       id: json['id'] as String,
-      type: $enumDecode(_$WorkerTypeEnumMap, json['type']),
-      data: fromJsonT(json['data']),
+      request: fromJsonT(json['request']),
     );
 
 Map<String, dynamic> _$WorkerRequestToJson<T>(
@@ -22,11 +21,5 @@ Map<String, dynamic> _$WorkerRequestToJson<T>(
 ) =>
     <String, dynamic>{
       'id': instance.id,
-      'type': _$WorkerTypeEnumMap[instance.type],
-      'data': toJsonT(instance.data),
+      'request': toJsonT(instance.request),
     };
-
-const _$WorkerTypeEnumMap = {
-  WorkerType.fibonacci: 'fibonacci',
-  WorkerType.random: 'random',
-};
