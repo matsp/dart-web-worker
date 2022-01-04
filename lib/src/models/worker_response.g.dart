@@ -6,41 +6,23 @@ part of 'worker_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-WorkerResponse<T> _$WorkerResponseFromJson<T>(
-  Map<String, dynamic> json,
-  T Function(Object? json) fromJsonT,
-) =>
-    WorkerResponse<T>(
+WorkerResponse _$WorkerResponseFromJson(Map<String, dynamic> json) =>
+    WorkerResponse(
       id: json['id'] as String,
       requestId: json['requestId'] as String,
-      response: _$nullableGenericFromJson(json['response'], fromJsonT),
+      responseJson: json['responseJson'] as String?,
       errors: (json['errors'] as List<dynamic>?)
           ?.map((e) => WorkerResponseError.fromJson(e))
           .toList(),
     );
 
-Map<String, dynamic> _$WorkerResponseToJson<T>(
-  WorkerResponse<T> instance,
-  Object? Function(T value) toJsonT,
-) =>
+Map<String, dynamic> _$WorkerResponseToJson(WorkerResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
       'requestId': instance.requestId,
-      'response': _$nullableGenericToJson(instance.response, toJsonT),
+      'responseJson': instance.responseJson,
       'errors': instance.errors?.map((e) => e.toJson()).toList(),
     };
-
-T? _$nullableGenericFromJson<T>(
-  Object? input,
-  T Function(Object? json) fromJson,
-) =>
-    input == null ? null : fromJson(input);
-
-Object? _$nullableGenericToJson<T>(
-  T? input,
-  Object? Function(T value) toJson,
-) =>
-    input == null ? null : toJson(input);
 
 WorkerResponseError _$WorkerResponseErrorFromJson(Map<String, dynamic> json) =>
     WorkerResponseError(

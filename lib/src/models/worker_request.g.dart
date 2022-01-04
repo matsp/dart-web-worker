@@ -6,20 +6,14 @@ part of 'worker_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-WorkerRequest<T> _$WorkerRequestFromJson<T>(
-  Map<String, dynamic> json,
-  T Function(Object? json) fromJsonT,
-) =>
-    WorkerRequest<T>(
+WorkerRequest _$WorkerRequestFromJson(Map<String, dynamic> json) =>
+    WorkerRequest(
       id: json['id'] as String,
-      request: fromJsonT(json['request']),
+      request: json['request'] as String,
     );
 
-Map<String, dynamic> _$WorkerRequestToJson<T>(
-  WorkerRequest<T> instance,
-  Object? Function(T value) toJsonT,
-) =>
+Map<String, dynamic> _$WorkerRequestToJson(WorkerRequest instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'request': toJsonT(instance.request),
+      'request': instance.request,
     };

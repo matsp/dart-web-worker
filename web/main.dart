@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:dart_web_worker/src/models/worker_request.dart';
 import 'package:dart_web_worker/src/models/worker_type.dart';
+import 'package:uuid/uuid.dart';
 
 import 'worker.dart';
 
@@ -18,8 +19,10 @@ void main() {
   // worker.postMessage(<String, String>{'type': 'fibonacci', 'data': '10'});
   worker.postMessage(
     jsonEncode(
-      WorkerRequest<int>(id: 'test-0', type: WorkerType.fibonacci, data: 10)
-          .toJson((value) => value),
+      WorkerRequest<int>(
+        id: Uuid().v4(),
+        request: 10,
+      ).toJson(jsonEncode),
     ),
   );
 }

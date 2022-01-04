@@ -3,23 +3,23 @@ import 'package:json_annotation/json_annotation.dart';
 part 'worker_response.g.dart';
 
 @JsonSerializable()
-class WorkerResponse<T> {
+class WorkerResponse {
   final String id;
   final String requestId;
-  final T? response;
+  final String? responseJson;
   final List<WorkerResponseError>? errors;
 
   const WorkerResponse({
     required this.id,
     required this.requestId,
-    required this.response,
+    this.responseJson,
     this.errors,
   });
 
-  factory WorkerResponse.fromJson(dynamic json, T Function(Object? json) fromJsonT) =>
-      _$WorkerResponseFromJson<T>(json, fromJsonT);
+  factory WorkerResponse.fromJson(dynamic json) =>
+      _$WorkerResponseFromJson(json);
 
-  Map<String, dynamic> toJson(Object? Function(T value) toJsonT) => _$WorkerResponseToJson<T>(this, toJsonT);
+  Map<String, dynamic> toJson() => _$WorkerResponseToJson(this);
 }
 
 @JsonSerializable()
@@ -37,4 +37,3 @@ class WorkerResponseError {
 
   Map<String, dynamic> toJson() => _$WorkerResponseErrorToJson(this);
 }
-

@@ -3,19 +3,16 @@ import 'package:json_annotation/json_annotation.dart';
 part 'worker_request.g.dart';
 
 @JsonSerializable()
-class WorkerRequest<T> {
+class WorkerRequest {
   final String id;
-  final T request;
+  final String request;
 
   const WorkerRequest({
     required this.id,
     required this.request,
   });
 
-  factory WorkerRequest.fromJson(
-          dynamic json, T Function(Object? json) fromJsonT) =>
-      _$WorkerRequestFromJson<T>(json, fromJsonT);
+  factory WorkerRequest.fromJson(dynamic json) => _$WorkerRequestFromJson(json);
 
-  Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
-      _$WorkerRequestToJson<T>(this, toJsonT);
+  Map<String, dynamic> toJson() => _$WorkerRequestToJson(this);
 }

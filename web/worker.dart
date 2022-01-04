@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:js';
 
 import 'package:dart_web_worker/src/models/worker_request.dart';
 import 'package:dart_web_worker/src/models/worker_response.dart';
 import 'package:dart_web_worker/src/models/worker_type.dart';
 import 'package:js/js.dart';
+import 'package:uuid/uuid.dart';
+import 'package:rxdart/rxdart.dart';
 
 @anonymous
 @JS()
 abstract class MessageEvent {
-  external WorkerRequest get data;
+  external String get data;
 }
 
 @JS('postMessage')
@@ -21,58 +24,65 @@ external void set onMessage(f);
 void main() {
   print('Worker - created');
 
-  final data$ = StreamController<WorkerRequest>.broadcast();
-  final results$ = StreamController<WorkerResponse>.broadcast();
+  final requests = StreamController<WorkerRequest>.broadcast();
+  final responses = StreamController<WorkerResponse>.broadcast();
 
-  onMessage = allowInterop((MessageEvent event) => data$.sink.add(WorkerRequest.fromJson(event.data, );
-   
+  onMessage = allowInterop((MessageEvent event) {
+    try {
+      final req = WorkerRequest.fromJson(jsonDecode(event.data),
+          (dynamic obj) => jsonDecode(obj));
 
-  final fibonacciService = FibonacciService();
-  results$.addStream(fibonacciService.response$);
-
-  data$.stream.listen((event) {
-    print(event);
+      requests.sink.add(req);
+    } catch (e) {
+      print(e);
+    }
   });
 
-  results$.stream.listen((event) {});
+  final fibonacciService = FibonacciService();
+  // responses$.addStream(fibonacciService.response$);
+  fibonacciService.response$.listen(
+    (event) {
+      print(event);
+    },
+  );
 
-  // service.result$.listen((event) {
-  //   PostMessage(event);
-  // });
-  // 'allowInterop' is necessary to pass a function into js.
-  // onMessage = allowInterop((event) {
-  //   var e = event as MessageEvent;
+  requests.stream
+      // .whereType<WorkerRequest<int>>()
+      // .where((event) => event is WorkerRequest<int>)
+      .listen((event) => print(event));
 
-  //   // print('Worker - event: ${e.data}');
-  //   PostMessage(fib(int.parse(e.data)).toString());
-  // });
+  requests.stream.listen((event) {
+    // TODO
+  });
+
+  responses.stream.listen((event) {
+    // TODO
+  });
 }
 
-class FibonacciService extends WebWorkerService<int> {
+class FibonacciService extends WebWorkerService<int, int> {
   @override
-  Future<WorkerResponse<int>> perform(int data) async => WorkerResponse(
-        id: '1',
-        requestId: 'todo', // TODO: how to obtain?!
-        type: WorkerType.fibonacci,
-        data: fib(data),
+  Future<WorkerResponse<int>> perform(WorkerRequest<int> workerRequest) async =>
+      WorkerResponse(
+        id: Uuid().v4(),
+        requestId: workerRequest.id,
+        response: fib(workerRequest.request),
       );
 }
 
-abstract class WebWorkerService<T> {
-  final _data = StreamController<T>();
-  final _response = StreamController<WorkerResponse>();
+abstract class WebWorkerService<R, S> {
+  final _request = StreamController<WorkerRequest<R>>();
+  final _response = StreamController<WorkerResponse<S>>();
 
-  Sink<T> get data$ => _data.sink;
-  Stream<WorkerResponse> get response$ => _response.stream;
+  Sink<WorkerRequest<R>> get request$ => _request.sink;
+  Stream<WorkerResponse<S>> get response$ => _response.stream;
 
   WebWorkerService() {
-    _data.stream.listen((T event) async {
-      final result = await perform(event);
-      _response.add(result);
-    });
+    _request.stream.listen(
+        (WorkerRequest<R> event) async => _response.add(await perform(event)));
   }
 
-  Future<WorkerResponse<T>> perform(T data);
+  Future<WorkerResponse<S>> perform(WorkerRequest<R> workerRequest);
 }
 
 int fib(int n) {
