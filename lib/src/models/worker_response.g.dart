@@ -9,6 +9,7 @@ part of 'worker_response.dart';
 WorkerResponse _$WorkerResponseFromJson(Map<String, dynamic> json) =>
     WorkerResponse(
       id: json['id'] as String,
+      type: $enumDecode(_$WorkerTypeEnumMap, json['type']),
       requestId: json['requestId'] as String,
       responseJson: json['responseJson'] as String?,
       errors: (json['errors'] as List<dynamic>?)
@@ -19,10 +20,15 @@ WorkerResponse _$WorkerResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$WorkerResponseToJson(WorkerResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'type': _$WorkerTypeEnumMap[instance.type],
       'requestId': instance.requestId,
       'responseJson': instance.responseJson,
       'errors': instance.errors?.map((e) => e.toJson()).toList(),
     };
+
+const _$WorkerTypeEnumMap = {
+  WorkerType.test: 'test',
+};
 
 WorkerResponseError _$WorkerResponseErrorFromJson(Map<String, dynamic> json) =>
     WorkerResponseError(

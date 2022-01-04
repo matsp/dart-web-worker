@@ -1,3 +1,4 @@
+import 'package:dart_web_worker/src/models/worker_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'worker_response.g.dart';
@@ -5,12 +6,14 @@ part 'worker_response.g.dart';
 @JsonSerializable()
 class WorkerResponse {
   final String id;
+  final WorkerType type;
   final String requestId;
   final String? responseJson;
   final List<WorkerResponseError>? errors;
 
   const WorkerResponse({
     required this.id,
+    required this.type,
     required this.requestId,
     this.responseJson,
     this.errors,
