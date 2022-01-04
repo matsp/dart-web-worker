@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:js';
 
 import 'package:dart_web_worker/src/models/test.dart';
 import 'package:dart_web_worker/src/models/worker_request.dart';
