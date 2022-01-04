@@ -16,7 +16,7 @@ abstract class MessageEvent {
 }
 
 @JS('postMessage')
-external void PostMessage(obj);
+external void postMessage(obj);
 
 @JS('onmessage')
 external set onMessage(f);
@@ -52,7 +52,7 @@ void main() {
   // handle responses
   responses.stream.listen((event) {
     print('Worker - send message to UI thread: $event');
-    PostMessage(event);
+    postMessage(event);
   });
 }
 
